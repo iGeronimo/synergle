@@ -2,8 +2,8 @@
  * Puzzle generator. For every puzzle it:
  *   1. picks one category per difficulty level (hardest first), respecting
  *      per-kind limits, similarity conflicts and recent-use cooldowns;
- *   2. picks four champions per category, favouring "red herrings" that also
- *      fit another category on the board;
+ *   2. picks four champions per category from those that fit no other
+ *      category on the board, so every tile belongs to exactly one group;
  *   3. keeps only boards with exactly one valid solution (exact-cover check);
  *   4. scores the survivors and returns the best one.
  */
@@ -28,7 +28,6 @@ export const KIND_LEVEL_WEIGHTS: Record<CategoryKind, [number, number, number, n
 /** A category can't be reused until this many puzzles have passed. */
 const COOLDOWN: Partial<Record<CategoryKind, number>> = { cost: 2, trait: 5 };
 const DEFAULT_COOLDOWN = 6;
-const HERRING_WEIGHT = 2.5;
 const CATEGORY_ATTEMPTS = 400;
 const MEMBER_ATTEMPTS = 25;
 const TARGET_CANDIDATES = 40;
@@ -116,21 +115,31 @@ function champFreshness(id: string, history: History): number {
   return recency * Math.pow(0.8, Math.max(0, excess));
 }
 
-function pickMembers(rng: Rng, chosen: Chosen, history: History): Map<Level, string[]> | null {
-  const entries = [...chosen.entries()];
-  const excluded = new Set(entries.flatMap(([, c]) => c.ambiguous));
-  const used = new Set<string>();
-  const available = (cat: Category) => cat.members.filter((m) => !used.has(m) && !excluded.has(m));
-  entries.sort((a, b) => available(a[1]).length - available(b[1]).length);
+/**
+ * The members each category may put on the board: those no other chosen
+ * category claims as a member or as ambiguous. A champion that fits two groups
+ * would leave players guessing which one it was meant for. Returns null if a
+ * category is left with fewer than four.
+ */
+function eligibleMembers(chosen: Chosen): Map<Level, string[]> | null {
+  const claims = new Map<string, number>();
+  for (const cat of chosen.values()) {
+    for (const id of new Set([...cat.members, ...cat.ambiguous])) claims.set(id, (claims.get(id) ?? 0) + 1);
+  }
+  const eligible = new Map<Level, string[]>();
+  for (const [level, cat] of chosen) {
+    const ids = cat.members.filter((id) => claims.get(id) === 1);
+    if (ids.length < 4) return null;
+    eligible.set(level, ids);
+  }
+  return eligible;
+}
 
+function pickMembers(rng: Rng, eligible: Map<Level, string[]>, history: History): Map<Level, string[]> | null {
   const groups = new Map<Level, string[]>();
-  for (const [level, cat] of entries) {
-    const avail = available(cat);
-    if (avail.length < 4) return null;
-    const isHerring = (m: string) => entries.some(([l, other]) => l !== level && other.members.includes(m));
-    const picked = rng.weightedSample(avail, 4, (m) => (isHerring(m) ? HERRING_WEIGHT : 1) * champFreshness(m, history));
+  for (const [level, ids] of eligible) {
+    const picked = rng.weightedSample(ids, 4, (m) => champFreshness(m, history));
     if (!picked) return null;
-    for (const m of picked) used.add(m);
     groups.set(level, picked);
   }
   return groups;
@@ -142,11 +151,8 @@ interface Candidate {
   score: number;
 }
 
-function scoreBoard(rng: Rng, chosen: Chosen, grid: string[], decoys: number, history: History): number {
-  const cats = [...chosen.values()];
-  const herrings = grid.filter((id) => cats.filter((c) => c.members.includes(id)).length >= 2).length;
-  let score = [0, 3, 4, 3.5, 2, 1][Math.min(herrings, 5)];
-  score += decoys === 0 ? 0 : decoys <= 3 ? 1.5 : decoys <= 10 ? 2 : decoys <= 20 ? 1 : -1;
+function scoreBoard(rng: Rng, grid: string[], decoys: number, history: History): number {
+  let score = decoys === 0 ? 0 : decoys <= 3 ? 1.5 : decoys <= 10 ? 2 : decoys <= 20 ? 1 : -1;
   for (const id of grid) {
     const age = history.champAge.get(id);
     if (age === 1) score -= 0.6;
@@ -191,13 +197,15 @@ export function generatePuzzle(ctx: GeneratorContext, opts: GenerateOptions): Pu
     for (let attempt = 0; attempt < CATEGORY_ATTEMPTS && candidates.length < TARGET_CANDIDATES; attempt++) {
       const chosen = pickCategories(rng, ctx, history, relaxed);
       if (!chosen) continue;
+      const eligible = eligibleMembers(chosen);
+      if (!eligible) continue;
       for (let m = 0; m < MEMBER_ATTEMPTS; m++) {
-        const groups = pickMembers(rng, chosen, history);
+        const groups = pickMembers(rng, eligible, history);
         if (!groups) continue;
         const grid = [...groups.values()].flat();
         const masks = validGroupMasks(grid, ctx.pool);
         if (countPartitions(masks.keys()) !== 1) continue;
-        candidates.push({ chosen, groups, score: scoreBoard(rng, chosen, grid, masks.size - 4, history) });
+        candidates.push({ chosen, groups, score: scoreBoard(rng, grid, masks.size - 4, history) });
         break;
       }
     }

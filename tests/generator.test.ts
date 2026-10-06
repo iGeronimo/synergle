@@ -6,7 +6,7 @@ import { buildCategoryPool, categoriesConflict, type Category } from "../scripts
 import { createContext, generatePuzzle } from "../scripts/lib/generator.ts";
 import { latestSetNumber, readJson, setDir } from "../scripts/lib/paths.ts";
 import type { SetData } from "../scripts/lib/set-types.ts";
-import { checkPuzzle, countPartitions, validGroupMasks } from "../scripts/lib/validate.ts";
+import { checkPuzzle, countPartitions, crossFits, validGroupMasks } from "../scripts/lib/validate.ts";
 
 const set = readJson<SetData>(path.join(setDir(latestSetNumber()), "set.json"));
 const { pool, issues } = buildCategoryPool(set);
@@ -44,6 +44,40 @@ describe("uniqueness check", () => {
   it("reports zero partitions when a group is impossible", () => {
     const masks = validGroupMasks(grid, [cat("a", g(0)), cat("b", g(4)), cat("c", g(8))]);
     assert.equal(countPartitions(masks.keys()), 0);
+  });
+});
+
+describe("cross-fit check", () => {
+  const grid = Array.from({ length: 16 }, (_, i) => `c${i}`);
+  const puzzle: Puzzle = {
+    id: 1,
+    kind: "practice",
+    set: 0,
+    setName: "",
+    groups: ([1, 2, 3, 4] as const).map((level, i) => ({
+      level,
+      category: `g${i}`,
+      title: `g${i}`,
+      description: "",
+      members: grid.slice(i * 4, i * 4 + 4),
+    })),
+    order: grid,
+    champions: Object.fromEntries(grid.map((id) => [id, { id, name: id, img: "", cost: 1, traits: [] }])),
+  };
+  const exact = puzzle.groups.map((group) => cat(group.category, group.members));
+
+  it("accepts a board where every champion fits one group", () => {
+    assert.deepEqual(crossFits(puzzle, exact), []);
+  });
+
+  it("flags a champion that also belongs to another group's category", () => {
+    const pool2 = [cat("g0", [...grid.slice(0, 4), "c4"]), ...exact.slice(1)];
+    assert.deepEqual(crossFits(puzzle, pool2), ['c4 (g1) also fits "g0"']);
+  });
+
+  it("flags a champion that is ambiguous for another group's category", () => {
+    const pool2 = [{ ...exact[0], ambiguous: ["c9"] }, ...exact.slice(1)];
+    assert.deepEqual(crossFits(puzzle, pool2), ['c9 (g2) also fits "g0"']);
   });
 });
 
@@ -92,6 +126,10 @@ describe("generator", () => {
         for (const a of byId.get(g.category)!.ambiguous) assert.ok(!board.has(a), `puzzle ${p.id}: ${a} vs ${g.category}`);
       }
     }
+  });
+
+  it("never puts a champion on the board that fits two of its groups", () => {
+    for (const p of puzzles) assert.deepEqual(checkPuzzle(p, pool).crossFits, [], `puzzle ${p.id}`);
   });
 
   it("is deterministic for a seed", () => {

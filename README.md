@@ -6,7 +6,7 @@ It's a static website: no server and no database, so you can host it for free. I
 
 - **Daily puzzle.** Changes at local midnight. Includes streaks, statistics and a spoiler-free share grid.
 - **Archive** of past dailies, plus **300 practice puzzles**. Each puzzle is its own page load, which means fresh ad impressions.
-- **Guaranteed fair puzzles.** Every board is checked to have exactly one valid solution.
+- **Guaranteed fair puzzles.** Every board is checked to have exactly one valid solution, and no champion on it fits more than one of its groups.
 - **SEO and AdSense groundwork.** Content pages (how to play, a champion and trait guide), privacy policy, terms, sitemap, robots.txt, `ads.txt`, Open Graph image and structured data.
 - **Ad slots placed with AdSense policy in mind.** Slots sit away from the game buttons, there are no ads on error pages, and space is reserved so ads don't shift the layout.
 - **Current set:** Set 18, *Enchanted Wilds* (65 champions). Updating to a new set takes a few commands.
@@ -56,8 +56,8 @@ The stack is [Eleventy](https://www.11ty.dev/) for static pages, plus a small va
 ## How puzzles are made
 
 1. **Categories.** `scripts/lib/categories.ts` builds most categories automatically from the data: costs, traits, trait-count trivia ("Only One Trait"), augments that grant champions, attack range, and name patterns. The rest are hand-written per set in `data/sets/<n>/curated.json`. Each curated category lists its `members` plus `ambiguous` champions that arguably fit (for example, a knock-up in a stun group). Ambiguous champions are never put on a board that uses that category.
-2. **Generation.** `scripts/lib/generator.ts` picks one category per difficulty (green, blue, purple, gold), avoids near-duplicate categories and recent repeats, and prefers red herrings: champions that fit two groups on the board.
-3. **Fairness.** `scripts/lib/validate.ts` lists every way the 16 champions could be split into four groups that some category explains, and keeps only boards with exactly one valid split.
+2. **Generation.** `scripts/lib/generator.ts` picks one category per difficulty (green, blue, purple, gold) and avoids near-duplicate categories and recent repeats. A champion only goes on the board if it fits exactly one of the four categories (counting `ambiguous` fits), so players never have to guess which of two groups a champion was meant for. Boards can still contain decoys: four champions that share a category that isn't one of the answers.
+3. **Fairness.** `scripts/lib/validate.ts` lists every way the 16 champions could be split into four groups that some category explains, and keeps only boards with exactly one valid split. It also flags any champion that fits a second group on its board; `npm run check` fails if an upcoming puzzle has one.
 
 Puzzle files are self-contained (names, portraits, explanations), so past puzzles keep working after the champion pool changes.
 

@@ -1,7 +1,7 @@
 /**
  * Fairness checks. A puzzle is fair when the 16 champions can be split into
  * four groups of four - each group fully explained by some category in the
- * pool - in exactly one way.
+ * pool - in exactly one way, and no champion fits more than one of its groups.
  */
 import type { Puzzle } from "../../shared/types.ts";
 import type { Category } from "./categories.ts";
@@ -64,9 +64,33 @@ export function groupMask(grid: readonly string[], members: readonly string[]): 
   return mask;
 }
 
+/**
+ * Champions that also fit another group on their board, as a member or an
+ * ambiguous fit of that group's category. Players can't tell which of the two
+ * groups such a champion was meant for.
+ */
+export function crossFits(puzzle: Puzzle, pool: readonly Category[]): string[] {
+  const byId = new Map(pool.map((c) => [c.id, c]));
+  const out: string[] = [];
+  for (const g of puzzle.groups) {
+    for (const other of puzzle.groups) {
+      const cat = other === g ? undefined : byId.get(other.category);
+      if (!cat) continue;
+      for (const id of g.members) {
+        if (cat.members.includes(id) || cat.ambiguous.includes(id)) {
+          out.push(`${puzzle.champions[id]?.name ?? id} (${g.title}) also fits "${other.title}"`);
+        }
+      }
+    }
+  }
+  return out;
+}
+
 export interface PuzzleCheck {
   problems: string[];
   warnings: string[];
+  /** Champions that fit a second group on the board (see crossFits). */
+  crossFits?: string[];
   partitions?: number;
   decoys?: number;
 }
@@ -100,7 +124,7 @@ export function checkPuzzle(puzzle: Puzzle, pool?: readonly Category[]): PuzzleC
     }
     const partitions = countPartitions(masks.keys());
     if (partitions !== 1) problems.push(`${partitions === 0 ? "no" : "more than one"} valid solution`);
-    return { problems, warnings, partitions, decoys: masks.size - 4 };
+    return { problems, warnings, crossFits: crossFits(puzzle, pool), partitions, decoys: masks.size - 4 };
   }
   return { problems, warnings };
 }

@@ -2,7 +2,9 @@
   "set": 18,
   "_readme": "Hand-written categories for Set 18 (Enchanted Wilds). Members were checked against the ability text in set.json. 'ambiguous' champions arguably fit, so the generator keeps them off the board whenever that category is used. 'abilityPattern' fills in breakdown notes and lets `npm run categories:report` flag champions you may have missed. Auto categories (costs, traits, name patterns...) are built in scripts/lib/categories.ts; drop one with 'disabled' or tweak it with 'overrides'.",
   "disabled": [],
-  "overrides": {},
+  "overrides": {
+    "name-two-part": { "ambiguous": ["leblanc", "scuttlecrab", "murkwolf", "brambleback", "fiddlesticks"] }
+  },
   "categories": [
     {
       "id": "ability-stun",
@@ -32,7 +34,7 @@
       "title": "Abilities That Leap, Dash or Blink",
       "description": "Their abilities move them across the board with a leap, jump, dash or blink.",
       "members": ["murkwolf", "yunara", "khazix", "rengar", "brambleback", "ezreal", "gnar"],
-      "ambiguous": ["kennen", "krug", "elderdragon", "reksai", "nidalee", "maokai"],
+      "ambiguous": ["kennen", "krug", "elderdragon", "reksai", "nidalee", "maokai", "masteryi"],
       "abilityPattern": "\\b(leap|jump|dash|blink)"
     },
     {
@@ -73,7 +75,7 @@
       "title": "Line Shots That Weaken per Enemy Hit",
       "description": "Their abilities fire through a line of enemies and lose damage for each enemy hit.",
       "members": ["varus", "ezreal", "ashe", "elderdragon", "lux"],
-      "ambiguous": ["sejuani", "sentinel", "gnar", "ahri"],
+      "ambiguous": ["sejuani", "sentinel", "gnar", "ahri", "draven"],
       "abilityPattern": "(for each enemy (it passes through|hit)|per enemy hit)"
     },
     {
@@ -83,7 +85,7 @@
       "title": "Abilities That Create Extra Units",
       "description": "Their abilities bring extra units onto the board.",
       "members": ["yorick", "azir", "krug", "mamabeak", "zyra"],
-      "ambiguous": ["maokai", "cinderling", "teemo", "leblanc", "morgana"],
+      "ambiguous": ["maokai", "cinderling", "teemo", "leblanc", "morgana", "hecarim"],
       "conflicts": ["trait-summoner"],
       "abilityPattern": "\\b(summon|spawn|split into)"
     },
@@ -94,7 +96,7 @@
       "title": "Rewards That Outlast Combat",
       "description": "Their abilities earn something you keep after the fight: permanent stats, anvils, unit copies or loot.",
       "members": ["veigar", "ornn", "leblanc", "teemo"],
-      "ambiguous": ["khazix", "rengar", "maokai"],
+      "ambiguous": ["khazix", "rengar", "maokai", "draven", "ivern"],
       "notes": {
         "veigar": "Kills permanently grant Ability Power.",
         "ornn": "Forge Power earns Artifact Anvils.",
@@ -118,7 +120,7 @@
       "title": "From Ionia",
       "description": "League of Legends champions whose home region is Ionia.",
       "members": ["akali", "karma", "rakan", "varus", "xayah", "shen", "yunara", "masteryi", "ahri", "lillia", "sett", "ivern", "kennen"],
-      "ambiguous": ["kobuko"]
+      "ambiguous": ["kobuko", "soraka"]
     },
     {
       "id": "lore-targon",
@@ -126,7 +128,8 @@
       "levels": [3, 4],
       "title": "From Mount Targon",
       "description": "Champions whose League of Legends home is Mount Targon, including the Solari and Lunari.",
-      "members": ["leona", "diana", "aphelios", "soraka", "taric", "alune"]
+      "members": ["leona", "diana", "aphelios", "soraka", "taric", "alune"],
+      "ambiguous": ["kayle", "morgana"]
     },
     {
       "id": "lore-freljord",
@@ -152,7 +155,7 @@
       "title": "From Noxus",
       "description": "League of Legends champions from the Noxian empire.",
       "members": ["elise", "leblanc", "cassiopeia", "draven"],
-      "ambiguous": ["alistar"]
+      "ambiguous": ["alistar", "sett"]
     },
     {
       "id": "lore-shurima",
@@ -193,7 +196,7 @@
       "title": "Two Words Mashed Into One",
       "description": "Each name is two English words joined together.",
       "members": ["brambleback", "scuttlecrab", "murkwolf", "fiddlesticks"],
-      "ambiguous": ["cinderling"],
+      "ambiguous": ["cinderling", "warwick", "leblanc"],
       "notes": {
         "brambleback": "Bramble + Back",
         "scuttlecrab": "Scuttle + Crab",
@@ -208,7 +211,7 @@
       "title": "Names Hiding an Animal",
       "description": "Each name contains an animal.",
       "members": ["shen", "draven", "rammus", "brambleback", "murkwolf", "scuttlecrab", "fiddlesticks"],
-      "ambiguous": ["elderdragon", "veigar", "rengar"],
+      "ambiguous": ["elderdragon", "veigar", "rengar", "cassiopeia", "cinderling"],
       "notes": {
         "shen": "s·HEN",
         "draven": "d·RAVEN",
@@ -226,6 +229,7 @@
       "title": "Names Hiding a Body Part",
       "description": "Each name contains a body part.",
       "members": ["karma", "brambleback", "mamabeak", "kogmaw"],
+      "ambiguous": ["morgana", "cassiopeia"],
       "notes": {
         "karma": "k·ARM·a",
         "brambleback": "bramble·BACK",
@@ -240,7 +244,7 @@
       "title": "Names That Are Real English Words",
       "description": "Each name is also an ordinary English word.",
       "members": ["karma", "pebbles", "sentinel", "fiddlesticks", "lux"],
-      "ambiguous": ["sett", "gnar", "varus"],
+      "ambiguous": ["sett", "gnar", "varus", "elderdragon", "mamabeak"],
       "notes": {
         "karma": "The good or bad you get back for your actions",
         "pebbles": "Small, smooth stones",

@@ -1,7 +1,7 @@
 /**
  * Checks every generated puzzle: structure, images on disk and (for puzzles
- * of a set we still have data for) that there is exactly one solution.
- * Exits with code 1 if an upcoming puzzle is broken.
+ * of a set we still have data for) that there is exactly one solution and no
+ * champion fits two groups. Exits with code 1 if an upcoming puzzle is broken.
  */
 import fs from "node:fs";
 import path from "node:path";
@@ -49,6 +49,14 @@ for (const kind of ["daily", "practice"] as PuzzleKind[]) {
       const label = isPast ? "warning (already played)" : "ERROR";
       console[isPast ? "warn" : "error"](`  ${kind} #${p.id} ${label}: ${result.problems.join("; ")}`);
       if (isPast) warnings++;
+      else failures++;
+    }
+    if (result.crossFits?.length) {
+      // Fixing this means swapping the puzzle, so released dailies (today's included) only warn.
+      const released = kind === "daily" && p.id <= todayNumber;
+      const label = released ? "warning (already released)" : "ERROR";
+      console[released ? "warn" : "error"](`  ${kind} #${p.id} ${label}: ${result.crossFits.join("; ")}`);
+      if (released) warnings++;
       else failures++;
     }
     checked++;
