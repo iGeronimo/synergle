@@ -1,5 +1,5 @@
 /** Behaviour shared by every page: dialogs, the stats button, privacy settings. */
-import { todayNumber } from "./config";
+import { todayNumber, withBase } from "./config";
 import { openDialog } from "./dom";
 import { renderResults } from "./game/results";
 import { loadStats } from "./stats";
@@ -50,7 +50,7 @@ export function initCommon(): void {
       const fc = window.googlefc;
       if (fc?.showRevocationMessage) fc.showRevocationMessage();
       else if (fc?.callbackQueue) fc.callbackQueue.push(() => window.googlefc?.showRevocationMessage?.());
-      else window.location.href = "/privacy/#cookies";
+      else window.location.href = withBase("/privacy/#cookies");
     }
   });
 }

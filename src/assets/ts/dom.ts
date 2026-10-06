@@ -1,6 +1,8 @@
+import { withBase } from "./config";
+
 type Child = Node | string | null | undefined | false;
 
-/** Tiny element builder: el("p", { class: "x" }, "text", otherNode). */
+/** Tiny element builder: el("p", { class: "x" }, "text", otherNode). Root-relative href/src get the base path. */
 export function el<K extends keyof HTMLElementTagNameMap>(
   tag: K,
   attrs: Record<string, string | number | boolean | undefined> = {},
@@ -11,6 +13,7 @@ export function el<K extends keyof HTMLElementTagNameMap>(
     if (value === undefined || value === false) continue;
     if (key === "class") node.className = String(value);
     else if (key === "text") node.textContent = String(value);
+    else if ((key === "href" || key === "src") && typeof value === "string") node.setAttribute(key, withBase(value));
     else node.setAttribute(key, value === true ? "" : String(value));
   }
   for (const child of children) {

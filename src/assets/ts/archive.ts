@@ -1,6 +1,6 @@
 /** Archive page: list every past daily puzzle with the player's result. */
 import { dateForPuzzleNumber, formatShortDate } from "../../../shared/dates";
-import { siteConfig, todayNumber } from "./config";
+import { siteConfig, todayNumber, withBase } from "./config";
 import { el } from "./dom";
 import type { SavedProgress } from "./game/state";
 import { load } from "./storage";
@@ -47,7 +47,7 @@ export function initArchive(root: HTMLElement): void {
     random.disabled = today <= 1;
     random.addEventListener("click", () => {
       const n = 1 + Math.floor(Math.random() * (today - 1));
-      window.location.href = `/play/?n=${n}`;
+      window.location.href = withBase(`/play/?n=${n}`);
     });
   }
 }

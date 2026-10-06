@@ -2,6 +2,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import * as esbuild from "esbuild";
+import { HtmlBasePlugin } from "@11ty/eleventy";
 
 let outputDir = "_site";
 
@@ -19,12 +20,14 @@ async function buildAssets(runMode) {
     target: ["es2020", "chrome90", "edge90", "firefox90", "safari15"],
     minify: production,
     sourcemap: production ? false : "linked",
-    external: ["/fonts/*", "/img/*"],
+    external: ["../fonts/*", "/img/*"],
     logLevel: "warning",
   });
 }
 
 export default function (eleventyConfig) {
+  // Prefixes root-relative URLs in the HTML output with pathPrefix (e.g. "/synergle/" on GitHub Pages).
+  eleventyConfig.addPlugin(HtmlBasePlugin);
   eleventyConfig.addPassthroughCopy({ "src/public": "/" });
   eleventyConfig.addWatchTarget("./src/assets/");
   eleventyConfig.addWatchTarget("./shared/");
@@ -64,6 +67,8 @@ export default function (eleventyConfig) {
 
   return {
     dir: { input: "src", includes: "_includes", data: "_data", output: "_site" },
+    // Set by the GitHub Pages workflow; "/" when the site lives at the domain root.
+    pathPrefix: process.env.PATH_PREFIX || "/",
     templateFormats: ["njk", "md", "11ty.js"],
     markdownTemplateEngine: "njk",
     htmlTemplateEngine: "njk",

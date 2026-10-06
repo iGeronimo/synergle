@@ -4,6 +4,8 @@ import { localISODate, puzzleNumberForDate } from "../../../shared/dates";
 export interface SiteConfig {
   name: string;
   url: string;
+  /** "" at the domain root, "/synergle" when hosted in a subfolder. */
+  basePath: string;
   launchDate: string;
   dailyCount: number;
   practiceCount: number;
@@ -18,6 +20,11 @@ export function siteConfig(): SiteConfig {
   const el = document.getElementById("site-config");
   cached = JSON.parse(el?.textContent || "{}") as SiteConfig;
   return cached;
+}
+
+/** Prefixes a root-relative URL ("/archive/") with the site's base path. */
+export function withBase(url: string): string {
+  return url.startsWith("/") && !url.startsWith("//") ? (siteConfig().basePath || "") + url : url;
 }
 
 /** Today's daily puzzle number, clamped to the puzzles that exist. */

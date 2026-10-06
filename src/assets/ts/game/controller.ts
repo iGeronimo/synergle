@@ -1,7 +1,7 @@
 /** Wires a game page together: loads the puzzle, handles input, persists progress. */
 import { dateForPuzzleNumber, formatLongDate, formatShortDate } from "../../../../shared/dates";
 import type { Puzzle, PuzzleKind } from "../../../../shared/types";
-import { outOfPuzzles, siteConfig, todayNumber, track } from "../config";
+import { outOfPuzzles, siteConfig, todayNumber, track, withBase } from "../config";
 import { el, openDialog, toast } from "../dom";
 import { load, save } from "../storage";
 import { loadStats, recordDaily, saveStats } from "../stats";
@@ -57,7 +57,7 @@ function resolveSession(mode: Mode): Session | { error: string } {
       return { error: "That puzzle isn't available. Pick one from the archive." };
     }
     if (n === today) {
-      window.location.replace("/");
+      window.location.replace(withBase("/"));
       return { error: "Opening today's puzzle..." };
     }
     return { mode, kind: "daily", number: n, key: `daily-${n}`, label: `#${n}` };
@@ -73,7 +73,7 @@ function resolveSession(mode: Mode): Session | { error: string } {
 }
 
 async function fetchPuzzle(kind: PuzzleKind, n: number): Promise<Puzzle> {
-  const res = await fetch(`/data/${kind}/${n}.json`, { cache: "default" });
+  const res = await fetch(withBase(`/data/${kind}/${n}.json`), { cache: "default" });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   return (await res.json()) as Puzzle;
 }

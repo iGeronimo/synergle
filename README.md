@@ -104,12 +104,13 @@ Everything lives in `site.config.json`:
 | `analytics.gaMeasurementId` | Optional Google Analytics 4 id (`G-…`). Consent Mode defaults are set for the EEA, UK and Switzerland. |
 | `puzzles.dailyDaysAhead`, `puzzles.practiceCount` | How far ahead to generate dailies, and the practice pool size |
 
-On a hosting provider you can override these with environment variables: `SITE_URL`, `ADSENSE_CLIENT`, `ADSENSE_SLOT_BELOW_GAME`, `ADSENSE_SLOT_IN_CONTENT`, `ADSENSE_SLOT_RAIL_LEFT`, `ADSENSE_SLOT_RAIL_RIGHT`, `ADSENSE_SLOT_FOOTER`, `GA_MEASUREMENT_ID`.
+On a hosting provider you can override these with environment variables: `SITE_URL`, `PATH_PREFIX` (e.g. `/synergle/` when served from a subfolder), `ADSENSE_CLIENT`, `ADSENSE_SLOT_BELOW_GAME`, `ADSENSE_SLOT_IN_CONTENT`, `ADSENSE_SLOT_RAIL_LEFT`, `ADSENSE_SLOT_RAIL_RIGHT`, `ADSENSE_SLOT_FOOTER`, `GA_MEASUREMENT_ID`.
 
 ## Deploying
 
 Any static host works. Push the project to GitHub, then:
 
+- **GitHub Pages** (current setup). `.github/workflows/pages.yml` builds and deploys every push to `main`. In the repo's Settings > Pages, set Source to "GitHub Actions". The site is served at `https://<user>.github.io/synergle/`. To move to a custom domain, enter it under Settings > Pages > Custom domain, add the DNS records GitHub shows, update `url` in `site.config.json` and re-run the workflow. The path prefix drops automatically. GitHub Pages ignores `_headers`.
 - **Cloudflare Pages** (recommended: free, fast, unlimited bandwidth). Build command `npm run build`, output directory `_site`. `.node-version` pins Node 22. `src/public/_headers` sets cache rules.
 - **Netlify.** `netlify.toml` is already configured.
 - **Vercel.** Framework preset "Other", build `npm run build`, output `_site`.

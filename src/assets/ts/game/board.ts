@@ -1,5 +1,6 @@
 /** Renders the 4x4 board and runs its animations. */
 import type { Puzzle } from "../../../../shared/types";
+import { withBase } from "../config";
 import type { GameState } from "./state";
 
 const reducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -42,7 +43,7 @@ export class Board {
     tile.dataset.id = id;
     tile.setAttribute("aria-pressed", "false");
     const img = document.createElement("img");
-    img.src = champ.img;
+    img.src = withBase(champ.img);
     img.alt = "";
     img.width = 192;
     img.height = 192;
@@ -68,7 +69,7 @@ export class Board {
       portraits.setAttribute("aria-hidden", "true");
       for (const id of group.members) {
         const img = document.createElement("img");
-        img.src = this.puzzle.champions[id].img;
+        img.src = withBase(this.puzzle.champions[id].img);
         img.alt = "";
         img.width = 64;
         img.height = 64;

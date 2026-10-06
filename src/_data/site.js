@@ -3,7 +3,7 @@ import fs from "node:fs";
 /**
  * Site settings from site.config.json. Environment variables override them,
  * which is handy on a hosting provider:
- *   SITE_URL, ADSENSE_CLIENT, ADSENSE_SLOT_BELOW_GAME, ADSENSE_SLOT_IN_CONTENT,
+ *   SITE_URL, PATH_PREFIX, ADSENSE_CLIENT, ADSENSE_SLOT_BELOW_GAME, ADSENSE_SLOT_IN_CONTENT,
  *   ADSENSE_SLOT_RAIL_LEFT, ADSENSE_SLOT_RAIL_RIGHT, ADSENSE_SLOT_FOOTER, GA_MEASUREMENT_ID
  */
 export default function () {
@@ -26,6 +26,8 @@ export default function () {
   return {
     ...cfg,
     url: (env.SITE_URL || cfg.url).replace(/\/+$/, ""),
+    // "" at the domain root, "/synergle" in a subfolder. Matches pathPrefix in eleventy.config.js.
+    basePath: (env.PATH_PREFIX || "").replace(/\/+$/, ""),
     adsense: {
       client: adsenseClient,
       // ads.txt wants the "pub-..." part of "ca-pub-..."
