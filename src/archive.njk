@@ -1,0 +1,21 @@
+---
+layout: layouts/base.njk
+title: Puzzle archive
+description: "Every past Synergle puzzle. Replay old TFT connections puzzles and fill in the ones you missed."
+rails: true
+---
+{%- from "partials/ad.njk" import ad with context -%}
+<section id="archive" class="archive">
+  <header class="prose-head">
+    <h1>Puzzle archive</h1>
+    <p class="lede">Missed a day? Every past daily puzzle is here. Archive games don't change your streak.</p>
+    <p class="archive-summary" data-archive-summary></p>
+    <button class="btn btn--gold" type="button" data-archive-random>Play a random past puzzle</button>
+  </header>
+  <ol class="archive-list" reversed>
+    <li class="archive-loading">Loading puzzles&hellip;</li>
+  </ol>
+  <noscript><p>The archive needs JavaScript to show your results.</p></noscript>
+</section>
+
+{{ ad("inContent") }}

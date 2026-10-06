@@ -1,0 +1,86 @@
+---
+layout: layouts/base.njk
+description: "Synergle is a free daily puzzle for Teamfight Tactics players: sort 16 TFT champions into four groups of four by trait, cost, ability, augment, lore or wordplay."
+bodyClass: page-game
+rails: true
+mode: daily
+gameHeading: Daily TFT connections puzzle
+eleventyComputed:
+  structuredData:
+    "@context": "https://schema.org"
+    "@graph":
+      - "@type": WebSite
+        name: "{{ site.name }}"
+        url: "{{ site.url }}/"
+        description: "{{ site.description }}"
+      - "@type": VideoGame
+        name: "{{ site.name }}"
+        url: "{{ site.url }}/"
+        description: "A daily connections-style puzzle about Teamfight Tactics champions."
+        genre: Puzzle
+        gamePlatform: Web browser
+        applicationCategory: Game
+        operatingSystem: Any
+        isAccessibleForFree: true
+        offers:
+          "@type": Offer
+          price: "0"
+          priceCurrency: USD
+---
+{%- from "partials/ad.njk" import ad with context -%}
+{%- set s = game.set -%}
+{% include "partials/game.njk" %}
+
+<section class="info-strip" aria-label="More ways to play">
+  <p>A new puzzle every day at midnight, your local time.</p>
+  <div class="info-strip-links">
+    <a class="chip-link" href="/practice/">Unlimited practice</a>
+    <a class="chip-link" href="/archive/">Past puzzles</a>
+    <a class="chip-link" href="/champions/">Set {{ s.set }} champion guide</a>
+  </div>
+</section>
+
+{{ ad("belowGame") }}
+
+<section class="content-section prose">
+  <h2>What is {{ site.name }}?</h2>
+  <p>{{ site.name }} is a free daily puzzle for <strong>Teamfight Tactics</strong> players. Every day you get sixteen champions from the current set, <strong>Set {{ s.set }}: {{ s.name }}</strong>. Your job is to sort them into four groups of four that share something. Sometimes it's a trait you've played a hundred times, sometimes a detail hidden in an ability tooltip, and sometimes just a pun in a champion's name.</p>
+  <p>Each puzzle has exactly one solution. We check this automatically, so no puzzle can be solved two different ways. But plenty of champions look like they belong in two places, and spotting those red herrings is the whole game.</p>
+
+  <h2>How to play</h2>
+  <ol>
+    <li>Tap four champions you think belong together, then press <strong>Submit</strong>.</li>
+    <li>Guess right and the group locks in with its category revealed. Guess wrong and you lose one of your four mistakes.</li>
+    <li>If three of your four picks are right, you'll see <em>"One away..."</em>.</li>
+    <li>Solve all four groups to win, then share your result grid with friends.</li>
+  </ol>
+  <p>Groups are color-coded by difficulty, like shop rarity: <span class="inline-level inline-level--l1">green</span> is the most straightforward, followed by <span class="inline-level inline-level--l2">blue</span> and <span class="inline-level inline-level--l3">purple</span>, while <span class="inline-level inline-level--l4">gold</span> is the most devious. <a href="/how-to-play/">Read the full rules and strategy tips.</a></p>
+
+  <h2>What can link four champions?</h2>
+  <dl class="category-types">
+    <div><dt>Shop cost</dt><dd>All four cost the same gold, such as <em>4-Cost Champions</em>.</dd></div>
+    <div><dt>Traits</dt><dd>All four share an origin or class from Set {{ s.set }}. {{ game.featuredTrait.name }} alone has {{ game.featuredTrait.members.length }} champions to choose from.</dd></div>
+    <div><dt>Trait trivia</dt><dd>Champions with only one trait, three traits, or a trait nobody else has.</dd></div>
+    <div><dt>Ability effects</dt><dd>Abilities that stun, shield, dash, shred armor or replace basic attacks.</dd></div>
+    <div><dt>Augments</dt><dd>Champions that a specific augment hands out when you take it.</dd></div>
+    <div><dt>League of Legends lore</dt><dd>Home regions like Ionia or the Freljord, yordles, vastaya and sibling pairs.</dd></div>
+    <div><dt>Wordplay</dt><dd>Names hiding animals or body parts, four-letter names, compound words and more.</dd></div>
+  </dl>
+</section>
+
+{{ ad("inContent") }}
+
+<section class="content-section prose">
+  <h2>This season: Set {{ s.set }}, {{ s.name }}</h2>
+  <p>Puzzles use the {{ s.champions.length }} shop champions and {{ s.traits.length }} traits of Set {{ s.set }}. Want an edge? The <a href="/champions/">champion guide</a> lists every unit's cost, traits and ability, and the <a href="/traits/">trait guide</a> shows every breakpoint. When a new TFT set launches, new puzzles switch to the new roster. Past puzzles stay playable in the <a href="/archive/">archive</a>.</p>
+
+  <h2>Frequently asked questions</h2>
+  <h3>Is {{ site.name }} free?</h3>
+  <p>Yes. There's nothing to buy and no account. Your progress and statistics are saved in your browser.</p>
+  <h3>When does the next puzzle come out?</h3>
+  <p>Every day at midnight in your own time zone, just like other daily word games. If you can't wait, play as many <a href="/practice/">practice puzzles</a> as you like.</p>
+  <h3>Do archive and practice games count for my streak?</h3>
+  <p>No. Your streak and win percentage only track the daily puzzle, so you can practice without risking your streak.</p>
+  <h3>Is this an official Riot Games game?</h3>
+  <p>No. {{ site.name }} is a fan project made under Riot Games' "Legal Jibber Jabber" policy and isn't endorsed by Riot Games. Read more <a href="/about/">about the project</a>.</p>
+</section>

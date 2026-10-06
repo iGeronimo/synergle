@@ -1,0 +1,57 @@
+---
+layout: layouts/page.njk
+title: How to play
+lede: "The rules, the difficulty colors, every kind of category, and some strategy for the trickier days."
+description: "How to play Synergle, the daily TFT connections puzzle: rules, difficulty colors, category types and strategy tips."
+---
+{%- set s = game.set -%}
+<h2>The rules</h2>
+<ol>
+  <li>The board shows sixteen champions from Teamfight Tactics Set {{ s.set }}: {{ s.name }}.</li>
+  <li>Hidden among them are <strong>four groups of four</strong>. Each group shares one specific connection.</li>
+  <li>Select four champions and press <strong>Submit</strong>. If all four belong to the same group, the group locks in and its category is revealed.</li>
+  <li>A wrong guess costs one of your <strong>four mistakes</strong>. Repeating a guess you already made costs nothing; you'll just see "Already guessed!"</li>
+  <li>If three of your four picks belong together, you'll see <strong>"One away..."</strong>.</li>
+  <li>Find all four groups to win. Use up all four mistakes and the remaining groups are revealed.</li>
+</ol>
+<p>On a computer you can press <kbd>Enter</kbd> to submit once four champions are selected. <strong>Shuffle</strong> rearranges the board, which helps you see it with fresh eyes. <strong>Deselect all</strong> clears your picks.</p>
+
+<h2>Difficulty colors</h2>
+<p>Every puzzle has one group of each difficulty. The colors follow TFT shop rarity, so the rarer the color, the harder the group.</p>
+<ul class="level-list">
+  <li><span class="sq sq--l1"></span><strong>Green: straightforward.</strong> Usually a shop cost or a well-known trait.</li>
+  <li><span class="sq sq--l2"></span><strong>Blue: medium.</strong> Often a trait, a simple ability effect or some trait-count trivia.</li>
+  <li><span class="sq sq--l3"></span><strong>Purple: tricky.</strong> Ability details, augments or League of Legends lore.</li>
+  <li><span class="sq sq--l4"></span><strong>Gold: devious.</strong> Wordplay, obscure stats and deep lore.</li>
+</ul>
+
+<h2>Kinds of categories</h2>
+<h3>Shop cost</h3>
+<p>Four champions that cost the same amount of gold. With {{ s.champions.length }} champions spread over five costs, there are usually a few extras of each cost on the board to throw you off.</p>
+<h3>Traits</h3>
+<p>Four champions that share an origin or class, like {{ game.featuredTrait.name }}. Remember that most champions have two or three traits, so one champion can look like it fits several groups. The <a href="/traits/">trait guide</a> lists every member.</p>
+<h3>Trait trivia</h3>
+<p>Categories about traits themselves: champions with <em>only one trait</em>, champions with <em>three traits</em>, or champions whose trait belongs to nobody else.</p>
+<h3>Ability effects</h3>
+<p>Groups built from ability tooltips: abilities that stun, grant a shield, dash or blink, cut enemy armor or magic resist, or replace basic attacks. Only the ability counts, not shields or burns that come from a trait. When a champion arguably fits, we keep them off the board for that puzzle.</p>
+<h3>Augments</h3>
+<p>Some augments hand you specific champions. If four champions all come from the same augment, that's a group.</p>
+<h3>League of Legends lore</h3>
+<p>Every TFT champion has a story from League of Legends: home regions like Ionia, Piltover or the Freljord, yordles and vastaya, even sibling pairs that are both in the set.</p>
+<h3>Wordplay</h3>
+<p>Ignore the game entirely and look at the names. Some hide an animal or a body part, some are two words mashed together, some are real English words, and some are just four letters long.</p>
+
+<h2>Strategy tips</h2>
+<ul>
+  <li><strong>Find the red herring first.</strong> If you spot five champions that share a trait, one of them belongs somewhere else. Work out which before you submit.</li>
+  <li><strong>Start with the gold group in mind.</strong> Wordplay and lore groups are easy to miss. Scanning the names early can save you a mistake later.</li>
+  <li><strong>Use "One away" wisely.</strong> It means three of your picks are right. Swap one champion at a time instead of starting over.</li>
+  <li><strong>Shuffle when you're stuck.</strong> Seeing the champions next to different neighbors often reveals a connection.</li>
+  <li><strong>Trust exact wording.</strong> "Abilities That Stun" means stun only, so knock-ups and sleeps don't count.</li>
+</ul>
+
+<h2>Daily puzzle, archive and practice</h2>
+<p>A new <a href="/">daily puzzle</a> starts at midnight in your time zone. Your statistics and streak only count daily puzzles. Missed a day? Every past puzzle is in the <a href="/archive/">archive</a>. Want more? <a href="/practice/">Practice mode</a> has {{ game.practiceCount }} extra puzzles.</p>
+
+<h2>Sharing your result</h2>
+<p>After you finish, press <strong>Share results</strong> to copy a spoiler-free grid of colored squares, one row per guess. It shows how you solved the puzzle without giving away any answers.</p>

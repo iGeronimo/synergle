@@ -1,0 +1,48 @@
+{%- set fiveCosts = game.byCost | last -%}
+{%- set bigTrait = game.featuredTrait -%}
+<dialog id="dlg-help" class="dialog" aria-labelledby="help-title">
+  <button class="dialog-x" type="button" data-close-dialog aria-label="Close">&times;</button>
+  <h2 id="help-title" class="dialog-title">How to play</h2>
+  <p class="dialog-lede">Find groups of four TFT champions that have something in common.</p>
+  <ul class="help-list">
+    <li>Select four champions and press <strong>Submit</strong> to check your guess.</li>
+    <li>Find all four groups before you make four mistakes.</li>
+    <li>Every puzzle has exactly one solution, but some champions seem to fit more than one group. Watch out for red herrings!</li>
+  </ul>
+
+  <h3 class="dialog-subtitle">Example groups</h3>
+  <div class="help-example">
+    <p class="help-example-title">{{ fiveCosts.cost }}-Cost Champions</p>
+    <div class="help-portraits">
+      {%- for c in fiveCosts.champions.slice(0, 4) %}
+      <figure><img src="{{ c.img }}" alt="" width="56" height="56" loading="lazy" decoding="async"><figcaption>{{ c.name }}</figcaption></figure>
+      {%- endfor %}
+    </div>
+  </div>
+  {%- if bigTrait %}
+  <div class="help-example">
+    <p class="help-example-title">{{ bigTrait.name }} trait</p>
+    <div class="help-portraits">
+      {%- for id in bigTrait.members.slice(0, 4) %}{% set c = game.champById[id] %}
+      <figure><img src="{{ c.img }}" alt="" width="56" height="56" loading="lazy" decoding="async"><figcaption>{{ c.name }}</figcaption></figure>
+      {%- endfor %}
+    </div>
+  </div>
+  {%- endif %}
+  <p class="help-more">Groups can also be ability effects (<em>Abilities That Stun</em>), augments, League of Legends lore (<em>Yordles</em>) or wordplay (<em>Names Hiding an Animal</em>).</p>
+
+  <h3 class="dialog-subtitle">Difficulty</h3>
+  <ul class="help-levels">
+    <li><span class="sq sq--l1"></span> Green: straightforward</li>
+    <li><span class="sq sq--l2"></span> Blue</li>
+    <li><span class="sq sq--l3"></span> Purple</li>
+    <li><span class="sq sq--l4"></span> Gold: devious</li>
+  </ul>
+  <p class="help-more">A new puzzle arrives every day at midnight, your local time. <a href="/how-to-play/">Full rules and tips</a></p>
+  <button class="btn btn--primary btn--wide" type="button" data-close-dialog>Let's play</button>
+</dialog>
+
+<dialog id="dlg-results" class="dialog dialog--results" aria-labelledby="results-title">
+  <button class="dialog-x" type="button" data-close-dialog aria-label="Close">&times;</button>
+  <div id="results-body" class="results"></div>
+</dialog>

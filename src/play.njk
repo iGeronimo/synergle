@@ -1,0 +1,24 @@
+---
+layout: layouts/base.njk
+permalink: /play/
+title: Archive puzzle
+description: "Play a past Synergle puzzle: sort sixteen TFT champions into four groups of four."
+bodyClass: page-game
+rails: true
+noindex: true
+mode: archive
+gameHeading: Archive puzzle
+---
+{%- from "partials/ad.njk" import ad with context -%}
+{% include "partials/game.njk" %}
+
+<section class="info-strip" aria-label="More ways to play">
+  <p>Archive games don't affect your daily streak.</p>
+  <div class="info-strip-links">
+    <a class="chip-link" href="/archive/">All past puzzles</a>
+    <a class="chip-link" href="/">Today's puzzle</a>
+    <a class="chip-link" href="/practice/">Practice</a>
+  </div>
+</section>
+
+{{ ad("belowGame") }}

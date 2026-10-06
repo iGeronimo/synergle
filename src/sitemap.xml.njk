@@ -1,0 +1,17 @@
+---
+permalink: /sitemap.xml
+eleventyExcludeFromCollections: true
+---
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+{%- for item in collections.all %}
+{%- if not item.data.noindex and item.url and not item.url.endsWith(".json") %}
+  <url>
+    <loc>{{ site.url }}{{ item.url }}</loc>
+    <lastmod>{{ site.buildDate }}</lastmod>
+    <changefreq>{{ "daily" if item.url == "/" or item.url == "/archive/" else "weekly" }}</changefreq>
+    <priority>{{ "1.0" if item.url == "/" else "0.6" }}</priority>
+  </url>
+{%- endif %}
+{%- endfor %}
+</urlset>

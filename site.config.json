@@ -1,0 +1,26 @@
+{
+  "name": "Synergle",
+  "tagline": "The daily TFT connections puzzle",
+  "description": "Find four groups of four Teamfight Tactics champions that share a trait, a cost, an ability effect or something sneakier. A free daily puzzle for the current TFT set.",
+  "url": "https://synergle.example.com",
+  "launchDate": "2026-10-05",
+  "contactEmail": "hello@synergle.example.com",
+  "operator": "The Synergle team",
+  "adsense": {
+    "client": "",
+    "slots": {
+      "belowGame": "",
+      "inContent": "",
+      "railLeft": "",
+      "railRight": "",
+      "footer": ""
+    }
+  },
+  "analytics": {
+    "gaMeasurementId": ""
+  },
+  "puzzles": {
+    "dailyDaysAhead": 365,
+    "practiceCount": 300
+  }
+}

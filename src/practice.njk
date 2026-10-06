@@ -1,0 +1,27 @@
+---
+layout: layouts/base.njk
+title: Practice puzzles
+description: "Unlimited TFT connections puzzles: practice sorting Teamfight Tactics champions into groups of four as often as you like."
+bodyClass: page-game
+rails: true
+mode: practice
+gameHeading: Practice puzzle
+---
+{%- from "partials/ad.njk" import ad with context -%}
+{% include "partials/game.njk" %}
+
+<section class="info-strip" aria-label="More ways to play">
+  <p>{{ game.practiceCount }} practice puzzles, separate from the daily puzzle and your streak.</p>
+  <div class="info-strip-links">
+    <a class="chip-link" href="/practice/">New random puzzle</a>
+    <a class="chip-link" href="/">Today's puzzle</a>
+  </div>
+</section>
+
+{{ ad("belowGame") }}
+
+<section class="content-section prose">
+  <h2>Practice mode</h2>
+  <p>Practice puzzles follow the same rules as the daily puzzle: four groups of four, four mistakes allowed, and exactly one solution. They're generated from the same Set {{ game.set.set }} champion pool, so they're a good way to learn the categories that come up most: traits, shop costs, ability effects, lore and wordplay.</p>
+  <p>Your practice results are saved in your browser, but they never touch your daily statistics or streak. Stuck on a group? Keep the <a href="/champions/">champion guide</a> open in another tab.</p>
+</section>

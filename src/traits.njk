@@ -1,0 +1,66 @@
+---
+layout: layouts/base.njk
+bodyClass: page-guide
+title: Set 18 trait guide
+eleventyComputed:
+  title: "Set {{ game.set.set }} trait guide"
+  description: "Every Teamfight Tactics Set {{ game.set.set }} ({{ game.set.name }}) trait with breakpoints and champions. Study up for today's Synergle puzzle."
+---
+{%- from "partials/ad.njk" import ad with context -%}
+{%- set s = game.set -%}
+<article class="guide">
+  <header class="prose-head">
+    <h1>Set {{ s.set }} trait guide</h1>
+    <p class="lede">{{ game.sharedTraits.length }} shared traits and {{ game.uniqueTraits.length }} one-champion traits in Set {{ s.set }}: {{ s.name }}. Trait groups are the backbone of most Synergle puzzles.</p>
+  </header>
+
+  <section aria-labelledby="shared-traits">
+    <h2 id="shared-traits" class="section-title">Shared traits</h2>
+    <div class="trait-grid">
+      {%- for t in game.sharedTraits %}
+      <article class="trait-card" id="{{ t.id }}">
+        <header class="trait-head">
+          {%- if t.icon %}<img class="trait-icon" src="{{ t.icon }}" alt="" width="40" height="40" loading="lazy">{% endif %}
+          <h3>{{ t.name }}</h3>
+          <span class="count">{{ t.members.length }} {{ t.members.length | pluralize("champion") }}</span>
+        </header>
+        <p class="trait-text">{{ t.text | nl2br | safe }}</p>
+        {%- if t.breakpoints.length and t.breakpoints[0].text %}
+        <ul class="breakpoints">
+          {%- for bp in t.breakpoints %}
+          <li><span class="bp-units">{{ bp.units }}</span> {{ bp.text }}</li>
+          {%- endfor %}
+        </ul>
+        {%- endif %}
+        <ul class="trait-members">
+          {%- for id in t.members %}{% set c = game.champById[id] %}
+          <li><a href="/champions/#{{ c.id }}" title="{{ c.name }}"><img class="cost-border--{{ c.cost }}" src="{{ c.img }}" alt="" width="48" height="48" loading="lazy" decoding="async"><span>{{ c.name }}</span></a></li>
+          {%- endfor %}
+        </ul>
+      </article>
+      {%- if loop.index == 8 %}
+      </div>
+      {{ ad("inContent") }}
+      <div class="trait-grid">
+      {%- endif %}
+      {%- endfor %}
+    </div>
+  </section>
+
+  <section aria-labelledby="unique-traits">
+    <h2 id="unique-traits" class="section-title">One-champion traits</h2>
+    <p class="section-lede">These traits belong to a single champion. "Has a One-Champion Trait" is a favorite Synergle category.</p>
+    <div class="trait-grid">
+      {%- for t in game.uniqueTraits %}{% set c = game.champById[t.members[0]] %}
+      <article class="trait-card trait-card--unique" id="{{ t.id }}">
+        <header class="trait-head">
+          {%- if t.icon %}<img class="trait-icon" src="{{ t.icon }}" alt="" width="40" height="40" loading="lazy">{% endif %}
+          <h3>{{ t.name }}</h3>
+          <a class="count" href="/champions/#{{ c.id }}">{{ c.name }}</a>
+        </header>
+        <p class="trait-text">{{ t.text | nl2br | safe }}</p>
+      </article>
+      {%- endfor %}
+    </div>
+  </section>
+</article>

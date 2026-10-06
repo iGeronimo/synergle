@@ -1,0 +1,9 @@
+---
+permalink: /ads.txt
+eleventyExcludeFromCollections: true
+---
+{%- if site.adsense.publisherId -%}
+google.com, {{ site.adsense.publisherId }}, DIRECT, f08c47fec0942fa0
+{%- else -%}
+# Add your AdSense publisher id (ca-pub-...) to site.config.json and rebuild.
+{%- endif %}

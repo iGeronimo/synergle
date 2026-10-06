@@ -1,0 +1,23 @@
+{#-
+  Google AdSense unit. Renders nothing until site.config.json has an AdSense
+  client id and a slot id for `name`; during `npm run dev` it shows a grey
+  placeholder instead so you can see the layout.
+  The push only happens when the unit is visible, so desktop-only rails don't
+  request ads on phones (they're display:none there).
+-#}
+{% macro ad(name, variant="") %}
+{%- set slot = site.adsense.slots[name] -%}
+{%- if noAds -%}
+{#- AdSense doesn't allow ads on error pages or pages without content. -#}
+{%- elif site.adsense.client and slot -%}
+<div class="ad ad--{{ name }} {{ variant }}">
+  <span class="ad-label">Advertisement</span>
+  <ins class="adsbygoogle" style="display:block" data-ad-client="{{ site.adsense.client }}" data-ad-slot="{{ slot }}" data-ad-format="{{ 'vertical' if name.startsWith('rail') else 'auto' }}" data-full-width-responsive="true"></ins>
+  <script>(function(s){var i=s.previousElementSibling;if(i&&i.offsetWidth>0){(window.adsbygoogle=window.adsbygoogle||[]).push({});}})(document.currentScript);</script>
+</div>
+{%- elif site.showAdPlaceholders -%}
+<div class="ad ad--{{ name }} ad--placeholder {{ variant }}" aria-hidden="true">
+  <span class="ad-label">Ad slot: {{ name }}</span>
+</div>
+{%- endif -%}
+{% endmacro %}

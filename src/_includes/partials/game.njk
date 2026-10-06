@@ -1,0 +1,26 @@
+{#- The game shell. JavaScript fetches the puzzle and replaces the skeleton tiles. -#}
+<section id="game" class="game" data-mode="{{ mode }}" aria-labelledby="game-heading">
+  <div class="game-head">
+    <h1 id="game-heading" class="game-kicker">{{ gameHeading }}</h1>
+    <p id="game-meta" class="game-meta">Loading puzzle&hellip;</p>
+  </div>
+  <p class="game-instructions">Create four groups of four!</p>
+  <div id="board" class="board board--loading" aria-busy="true" aria-label="Champions">
+    {%- for i in range(0, 16) %}
+    <div class="tile tile--skeleton" aria-hidden="true"></div>
+    {%- endfor %}
+  </div>
+  <div class="mistakes">
+    <span>Mistakes remaining:</span>
+    <span id="mistakes-dots" class="mistake-dots" role="img" aria-label="4 of 4 mistakes remaining"><i></i><i></i><i></i><i></i></span>
+  </div>
+  <div class="game-controls">
+    <button id="btn-shuffle" class="btn btn--ghost" type="button" disabled>Shuffle</button>
+    <button id="btn-deselect" class="btn btn--ghost" type="button" disabled>Deselect all</button>
+    <button id="btn-submit" class="btn btn--primary" type="button" disabled>Submit</button>
+  </div>
+  <div id="game-after" class="game-after" hidden></div>
+  <noscript><p class="board-message">{{ site.name }} needs JavaScript to run. Please enable it and reload the page.</p></noscript>
+</section>
+<div id="toast" class="toast-region" role="status" aria-live="polite"></div>
+<section id="breakdown" class="breakdown" hidden></section>

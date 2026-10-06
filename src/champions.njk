@@ -1,0 +1,54 @@
+---
+layout: layouts/base.njk
+bodyClass: page-guide
+title: Set 18 champion guide
+description: "Every Teamfight Tactics Set 18 champion with cost, traits and ability. Study up for today's Synergle puzzle."
+eleventyComputed:
+  title: "Set {{ game.set.set }} champion guide"
+  description: "All {{ game.set.champions.length }} Teamfight Tactics Set {{ game.set.set }} ({{ game.set.name }}) champions with their cost, traits and ability. Study up for today's Synergle puzzle."
+---
+{%- from "partials/ad.njk" import ad with context -%}
+{%- set s = game.set -%}
+<article class="guide">
+  <header class="prose-head">
+    <h1>Set {{ s.set }} champion guide</h1>
+    <p class="lede">All {{ s.champions.length }} champions in Teamfight Tactics Set {{ s.set }}: {{ s.name }}, grouped by shop cost. Every Synergle category is built from this information, plus a little lore and wordplay.</p>
+    <nav class="cost-jump" aria-label="Jump to cost">
+      {%- for group in game.byCost %}
+      <a class="cost-badge cost-badge--{{ group.cost }}" href="#cost-{{ group.cost }}">{{ group.cost }}-cost</a>
+      {%- endfor %}
+    </nav>
+  </header>
+
+  {%- for group in game.byCost %}
+  <section class="cost-section" id="cost-{{ group.cost }}" aria-labelledby="cost-{{ group.cost }}-title">
+    <h2 id="cost-{{ group.cost }}-title" class="cost-title cost-title--{{ group.cost }}">{{ group.cost }}-cost champions <span class="count">{{ group.champions.length }}</span></h2>
+    <div class="champ-grid">
+      {%- for c in group.champions %}
+      <article class="champ-card cost-border--{{ c.cost }}" id="{{ c.id }}">
+        <img class="champ-portrait" src="{{ c.img }}" alt="{{ c.name }}" width="96" height="96" loading="lazy" decoding="async">
+        <div class="champ-body">
+          <h3 class="champ-name">{{ c.name }}</h3>
+          <p class="champ-traits">
+            {%- for t in c.traits %}
+            {%- set trait = game.traitByName[t] %}
+            <a class="trait-chip" href="/traits/#{{ trait.id if trait else (t | slug) }}">{% if trait and trait.icon %}<img src="{{ trait.icon }}" alt="" width="16" height="16" loading="lazy">{% endif %}{{ t }}</a>
+            {%- endfor %}
+          </p>
+          <p class="champ-meta">Range {{ c.stats.range }} &middot; {{ c.stats.initialMana }}/{{ c.stats.mana }} mana</p>
+          <details class="champ-ability">
+            <summary><span class="ability-label">Ability</span> {{ c.ability.name }}</summary>
+            <p>{{ c.ability.text | nl2br | safe }}</p>
+          </details>
+        </div>
+      </article>
+      {%- endfor %}
+    </div>
+  </section>
+  {%- if loop.index == 2 %}
+  {{ ad("inContent") }}
+  {%- endif %}
+  {%- endfor %}
+
+  <p class="guide-note">Ability numbers scale with star level, so they're shown as X. Data from Community Dragon, last updated {{ s.fetchedAt | isoDate }}.</p>
+</article>

@@ -1,0 +1,15 @@
+---
+layout: layouts/base.njk
+---
+<article class="prose">
+  <header class="prose-head">
+    <h1>{{ title }}</h1>
+    {%- if lede %}
+    <p class="lede">{{ lede }}</p>
+    {%- endif %}
+    {%- if updated %}
+    <p class="updated">Last updated {{ updated }}</p>
+    {%- endif %}
+  </header>
+  {{ content | safe }}
+</article>
